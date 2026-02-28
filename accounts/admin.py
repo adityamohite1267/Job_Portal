@@ -7,20 +7,21 @@ from .models import CustomUser,RecruiterProfile,JobSeekerProfile,Skill
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
-    def get_fieldsets(self, request, obj=None):
-        fieldsets = list(super().get_fieldsets(request, obj))
+    # Fields shown when EDITING a user
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        ("Personal Info", {"fields": ("first_name", "last_name", "email")}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        ("Important dates", {"fields": ("last_login", "date_joined")}),
+        ("Additional Info", {"fields": ("user_type", "phone", "profile_picture")}),)
 
-        fieldsets.append(
-            ("Additional Info", {
-                "fields": ("user_type","email", "phone", "profile_picture"),}))
-        return fieldsets
+    # Fields shown when ADDING a new user
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("username", "email", "password1", "password2", "user_type", "phone", "profile_picture"),}),)
 
-    def get_add_fieldsets(self, request):
-        fieldsets = list(super().get_add_fieldsets(request))
-        fieldsets.append(
-            ("Additional Info", {
-                "fields": ("user_type", "phone", "profile_picture"),}))
-        return fieldsets
+    list_display = ("username", "email", "user_type", "is_staff")
 
 @admin.register(RecruiterProfile)
 class RecruiterProfileAdmin(admin.ModelAdmin):
