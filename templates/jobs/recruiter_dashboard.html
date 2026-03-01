@@ -4,6 +4,47 @@
 <div class="container">
 <h2>Recruiter Dashboard</h2>
 <p>Welcome {{request.user.email }} </p>
-<a href="{% url 'jobs:create_job_post' %}">Add Job</a>
+<a href="{% url 'jobs:create_job_post' %}" class="btn btn-primary mb-2">Add Job</a>
+
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Logout</button>
+</form>
+</div>
+<div class="container">
+    <table class="table card">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.title }}</td>
+            <td>
+                {% if job.is_active %}
+                    <span class="badge bg-success">Active</span>
+                {% else %}
+                    <span class="badge bg-danger">Inactive</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if job.is_active %}
+                    <a href="{% url 'jobs:toggle_job_status' job.id %}" class="btn btn-warning btn-sm">
+                        Deactivate
+                    </a>
+                {% else %}
+                    <a href="{% url 'jobs:toggle_job_status' job.id %}" class="btn btn-success btn-sm">
+                        Activate
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 </div>
 {% endblock %}

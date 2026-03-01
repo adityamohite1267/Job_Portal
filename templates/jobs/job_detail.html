@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h3>{{ job.title }}</h3>
+        <p><strong>Company:</strong> {{ job.company_name }}</p>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Salary:</strong> ₹{{ job.salary }}</p>
+
+        <hr>
+
+        <h5>Description</h5>
+        <p>{{ job.description }}</p>
+
+        <hr>
+        <div>
+        <h5>Skills Required</h5>
+        {% for skill in job.skills_required.all %}
+            <span class="badge bg-primary">{{ skill.name }}</span>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

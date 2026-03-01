@@ -13,7 +13,7 @@ class Job(models.Model):
     JOB_TYPE_CHOICES = (('FULL_TIME','Full_Time'),('PART_TIME','Part_Time'),
                         ('INTERNSHIP','Internship'))
     recruiter = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                  limit_choices_to={'user_type':'RECRUITER'})
+                                  limit_choices_to={'user_type':'recruiter'})
     
     title = models.CharField(max_length=200)
     company_name = models.CharField(max_length=200)

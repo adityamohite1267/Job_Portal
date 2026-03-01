@@ -18,11 +18,14 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
     path('jobs/',include("jobs.urls",namespace="jobs")),
+    path('',include('jobs.urls')),
+    path('logout/',auth_views.LogoutView.as_view(next_page='recruiter_login'),name='logout'),
     # path("profile/",include("profiles.urls"))
 ]
 
