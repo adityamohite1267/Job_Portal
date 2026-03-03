@@ -14,3 +14,8 @@ class LocationAdmin(admin.ModelAdmin):
     list_display = ("city", "state", "country")
     search_fields = ("city", "state")
     list_filter = ("state", "country")
+@admin.register(Application)
+class ApplicationAdmin(admin.ModelAdmin):
+    list_display = ('job','applicant','status','applied_at')
+    list_filter = ('status',)
+    search_fields = ('job__title','applicant__email') 

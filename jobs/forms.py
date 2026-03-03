@@ -1,5 +1,5 @@
 from django import forms
-from .models import Job, Location
+from .models import Job, Location,Application
 from accounts.models import Skill
 
 class JobForm(forms.ModelForm):
@@ -24,3 +24,11 @@ class JobForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['skills_required'].queryset = Skill.objects.all().order_by('name')
         self.fields['skills_required'].required = True
+
+class ApplicationForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = ['resume', 'cover_letter']
+        widgets = {
+            'cover_letter':forms.Textarea(attrs={'class':'form-control', 'rows':4,'placeholder':'Write your cover letter...'})
+        }

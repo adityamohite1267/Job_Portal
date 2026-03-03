@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 # Create your models here.
 class Location(models.Model):
     city = models.CharField(max_length=100)
@@ -27,4 +28,18 @@ class Job(models.Model):
     
     def __str__(self):
         return f"{self.title} - {self.company_name}"
-    
+class Application(models.Model):
+    STATUS_CHOICES = (('APPLIED','Applied'),('UNDER_REVIEW','Under Review'),('SHORTLISTED','Shortlisted'),('REJECTED','Rejected'),('HIRED','Hired'),)
+    job = models.ForeignKey('Job',on_delete=models.CASCADE,related_name='applications')
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='applications')
+    resume =models.FileField(upload_to='application_resumes/')
+    cover_letter = models.TextField(blank=True)
+    status = models.CharField(max_length=20,choices=STATUS_CHOICES,default='APPLIED')
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('job','applicant')
+        ordering = ['-applied_at']
+
+    def __str__(self):
+        return f"{self.applicant.email} applied to {self.job.title}"

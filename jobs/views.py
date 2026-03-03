@@ -1,9 +1,9 @@
-from django.shortcuts import render,redirect
-from django.shortcuts import get_object_or_404
-from .forms import JobForm
-from .models import Job,Location
+from django.shortcuts import render,redirect,get_object_or_404
+from .forms import JobForm,ApplicationForm
+from .models import Job,Location,Application
 from accounts.decorators import recruiter_required
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -41,12 +41,68 @@ def job_list(request):
     jobs = Job.objects.all().order_by('-posted_at')
     return render(request,'jobs/jobs_list.html',{'jobs':jobs})
 
-def job_detail(request,pk):
-    job = get_object_or_404(Job,pk=pk)
-    return render(request,"jobs/job_detail.html",{"job":job})
+def job_detail(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+
+    has_applied = False
+    if request.user.is_authenticated and request.user.user_type == 'jobseeker':
+        has_applied = Application.objects.filter(
+
+            applicant=request.user
+        ).exists()
+
+    return render(request, 'jobs/job_detail.html', {
+        'job': job,
+        'has_applied': has_applied
+    })
 
 def toggle_job_status(request,job_id):
     job = get_object_or_404(Job,id=job_id,recruiter= request.user)
     job.is_active =  not job.is_active
     job.save()
     return redirect('jobs:recruiter_dashboard')
+
+@login_required
+def apply_job(request, pk):
+    job1 = get_object_or_404(Job, pk=pk, is_active=True)
+
+    if request.user.user_type != 'jobseeker':
+        messages.error(request, "Only Job Seekers can apply.")
+        return redirect('jobs:job_detail', pk=job1.pk)
+
+    #show form
+    if request.method == 'GET':
+        form = ApplicationForm()
+        return render(request, 'jobs/apply_job.html', {
+            'form': form,
+            'job': job1
+        })
+
+    #submit form
+    if request.method == 'POST':
+
+        # prevent duplicate applications
+        if Application.objects.filter(job=job1, applicant=request.user).exists():
+            messages.warning(request, "You have already applied.")
+            return redirect('jobs:job_detail', pk=job1.pk)
+
+        form = ApplicationForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            application = form.save(commit=False)
+            application.job = job1
+            application.applicant = request.user
+
+            if not application.resume:
+                profile = request.user.jobseekerprofile
+                if profile.resume:
+                    application.resume = profile.resume
+                else:
+                    messages.error(request, "Please Upload Resume.")
+                    return redirect('jobs:job_detail', pk=job1.pk)
+
+            application.save()
+            messages.success(request, "Application Submitted Successfully!")
+            return redirect('jobs:job_detail', pk=job1.pk)
+
+    return redirect('jobs:job_detail', pk=job1.pk)
