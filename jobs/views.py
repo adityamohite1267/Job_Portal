@@ -4,14 +4,21 @@ from .models import Job,Location,Application
 from accounts.decorators import recruiter_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Create your views here.
 
 
 @login_required
 def recruiter_dashboard(request):
-    jobs =Job.objects.filter(recruiter=request.user)
-    return render(request,"jobs/recruiter_dashboard.html",{'jobs':jobs})
+
+    # recruiter jobs
+    jobs = Job.objects.filter(recruiter=request.user)
+
+    # applications for those jobs
+    applications = Application.objects.filter(job__recruiter=request.user).select_related('job','applicant')
+    context = {'jobs': jobs,'applications': applications}
+    return render(request, 'jobs/recruiter_dashboard.html', context)
 
 @login_required
 def create_job_post(request):
@@ -38,7 +45,12 @@ def create_job_post(request):
     return render(request,'jobs/create_job.html',{"form":form})
 
 def job_list(request):
-    jobs = Job.objects.all().order_by('-posted_at')
+    job_list = Job.objects.filter(is_active=True).order_by('-posted_at')
+
+    paginator = Paginator(job_list, 3)
+    page_number = request.GET.get('page')
+
+    jobs = paginator.get_page(page_number)
     return render(request,'jobs/jobs_list.html',{'jobs':jobs})
 
 def job_detail(request, pk):
@@ -47,7 +59,7 @@ def job_detail(request, pk):
     has_applied = False
     if request.user.is_authenticated and request.user.user_type == 'jobseeker':
         has_applied = Application.objects.filter(
-
+            job=job,
             applicant=request.user
         ).exists()
 

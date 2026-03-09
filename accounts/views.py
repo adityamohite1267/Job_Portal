@@ -20,6 +20,3 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request,"accounts/login.html",{"form": form})
-def recruiter_logout(request):
-    logout(request)
-    return redirect("recruiter_login")
