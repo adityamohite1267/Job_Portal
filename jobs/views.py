@@ -118,3 +118,14 @@ def apply_job(request, pk):
             return redirect('jobs:job_detail', pk=job1.pk)
 
     return redirect('jobs:job_detail', pk=job1.pk)
+
+@login_required
+def my_applications(request):
+
+    applications = Application.objects.filter(
+        applicant=request.user
+    ).select_related('job')
+
+    return render(request,
+                  "jobs/my_applications.html",
+                  {"applications": applications})

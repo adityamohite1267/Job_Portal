@@ -101,6 +101,7 @@
             <th>Applicant</th>
             <th>Email</th>
             <th>Applied On</th>
+            <th>Resume</th>
           </tr>
         </thead>
 
@@ -115,6 +116,7 @@
             <td>{{ app.applicant.email }}</td>
 
             <td>{{ app.applied_at }}</td>
+            <td>{{ app.applicant.resume }}</td>
           </tr>
 
           {% empty %}

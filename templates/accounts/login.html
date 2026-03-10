@@ -8,7 +8,7 @@
         <form method="post" novalidate>   <!-- novalidate use because we handle validate in backend in form-->
             {% csrf_token %}
 
-           
+           <input type="hidden" name="next" value="{{ request.GET.next }}">
             {% if form.non_field_errors %}
                 <div class="alert alert-danger">
                     {{ form.non_field_errors }}
@@ -39,6 +39,11 @@
                 Login
             </button>
         </form>
+        <hr>
+        <p class="text-center mb-0">
+            Don't have an account?
+            <a href="{% url 'accounts:signup' %}">Create one</a>
+        </p>
     </div>
 </div>
 {% endblock %}

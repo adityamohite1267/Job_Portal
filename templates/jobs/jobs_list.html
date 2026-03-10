@@ -15,7 +15,7 @@
     </a>
     {% endif %}
   </div>
-
+  
   {% for job in jobs %}
 
   <div class="card mb-3 shadow-sm border-0">
@@ -71,8 +71,8 @@
         Previous
       </a>
     </li>
-    {% endif %} {% for num in jobs.paginator.page_range %} {% if jobs.number ==
-    num %}
+    {% endif %} {% for num in jobs.paginator.page_range %} 
+    {% if jobs.number == num %}
 
     <li class="page-item active">
       <span class="page-link">{{ num }}</span>
