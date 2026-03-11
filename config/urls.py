@@ -25,7 +25,7 @@ urlpatterns = [
     path('accounts/',include('accounts.urls',namespace='accounts')),
     path('',include("jobs.urls",namespace="jobs")),
     # path('',include('jobs.urls')),
-    path('logout/',auth_views.LogoutView.as_view(next_page='accounts:login'),name='logout'),
+    path('logout/',auth_views.LogoutView.as_view(),name='logout'),
     # path("profile/",include("profiles.urls"))
 ]
 

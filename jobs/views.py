@@ -115,7 +115,7 @@ def apply_job(request, pk):
 
             application.save()
             messages.success(request, "Application Submitted Successfully!")
-            return redirect('jobs:job_detail', pk=job1.pk)
+        return render(request, 'jobs/apply_job.html', {'form': form,'job': job1})
 
     return redirect('jobs:job_detail', pk=job1.pk)
 

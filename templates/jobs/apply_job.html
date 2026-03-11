@@ -2,12 +2,50 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h3>Apply for {{ job.title }} </h3>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
+    <div class="card shadow-sm">
+        <div class="card-body">
 
-        <button type="submit" class="btn btn-primary">Submit Aplication</button>
-    </form>
+            <h3 class="mb-4">Apply for {{ job.title }}</h3>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Resume Upload -->
+                <div class="mb-3">
+                    <label class="form-label">Upload Resume (PDF only)</label>
+                    {{ form.resume }}
+                    
+                    {% if form.resume.errors %}
+                        <div class="alert alert-danger py-1 mt-1 small">
+                            {{ form.resume.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Cover Letter -->
+                <div class="mb-3">
+                    <label class="form-label">Cover Letter</label>
+                    {{ form.cover_letter }}
+
+                    {% if form.cover_letter.errors %}
+                        <div class="text-danger small">
+                            {{ form.cover_letter.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">
+                    Submit Application
+                </button>
+
+                <a href="{% url 'jobs:joblist' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+    </div>
 </div>
 {% endblock %}
