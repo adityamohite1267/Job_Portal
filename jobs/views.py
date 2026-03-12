@@ -124,8 +124,20 @@ def my_applications(request):
 
     applications = Application.objects.filter(
         applicant=request.user
-    ).select_related('job')
+    ).select_related('job','job__recruiter')
 
-    return render(request,
-                  "jobs/my_applications.html",
-                  {"applications": applications})
+    return render(request,"jobs/my_applications.html",{"applications": applications})
+
+@login_required
+def update_application_status(request,app_id,status):
+
+    application = get_object_or_404(Application,id=app_id,job__recruiter=request.user)
+    valid_status = [choice[0] for choice in Application.STATUS_CHOICES]
+
+    if status not in valid_status:
+        return redirect('jobs:recruiter_dashboard')
+
+    application.status = status
+    application.save()
+    messages.success(request,f"Application marked as {status}")
+    return redirect('jobs:recruiter_dashboard')

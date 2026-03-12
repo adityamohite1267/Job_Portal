@@ -14,9 +14,12 @@
             <tr>
                 <th>Job Title</th>
                 <th>Company</th>
+                <th>Recruiter</th>
                 <th>Location</th>
                 <th>Applied Date</th>
+                <th>Status</th>
                 <th>View Job</th>
+                <th>Resume</th>
             </tr>
         </thead>
 
@@ -27,13 +30,39 @@
             <tr>
                 <td>{{ application.job.title }}</td>
                 <td>{{ application.job.company_name }}</td>
+                <td>{{ application.job.recruiter.email }}</td>
                 <td>{{ application.job.location }}</td>
                 <td>{{ application.applied_at|date:"d M Y" }}</td>
+                
+                <td>
+
+                {% if application.status == "APPLIED" %}
+                <span class="badge bg-secondary">Applied</span>
+
+                {% elif application.status == "UNDER_REVIEW" %}
+                <span class="badge bg-primary">Under Review</span>
+
+                {% elif application.status == "SHORTLISTED" %}
+                <span class="badge bg-info">Shortlisted</span>
+
+                {% elif application.status == "REJECTED" %}
+                <span class="badge bg-danger">Rejected</span>
+
+                {% elif application.status == "HIRED" %}
+                <span class="badge bg-success">Hired</span>
+                {% endif %}
+
+                </td>
 
                 <td>
                     <a href="{% url 'jobs:job_detail' application.job.id %}"
                        class="btn btn-sm btn-primary">
-                       View
+                       View Job
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ application.resume.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                        View Resume
                     </a>
                 </td>
             </tr>

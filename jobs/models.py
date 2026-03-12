@@ -38,7 +38,7 @@ class Application(models.Model):
     applied_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('job','applicant')
+        unique_together = ('job','applicant')  #One user can apply only once per job
         ordering = ['-applied_at']
 
     def __str__(self):
