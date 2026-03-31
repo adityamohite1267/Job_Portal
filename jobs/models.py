@@ -35,6 +35,7 @@ class Application(models.Model):
     resume =models.FileField(upload_to='application_resumes/')
     cover_letter = models.TextField(blank=True)
     status = models.CharField(max_length=20,choices=STATUS_CHOICES,default='APPLIED')
+    match_score = models.IntegerField(null=True,blank=True)
     applied_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

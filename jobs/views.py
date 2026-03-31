@@ -5,6 +5,7 @@ from accounts.decorators import recruiter_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
+from .utils import extract_resume_text,calculate_match_score
 
 # Create your views here.
 
@@ -17,7 +18,18 @@ def recruiter_dashboard(request):
 
     # applications for those jobs
     applications = Application.objects.filter(job__recruiter=request.user).select_related('job','applicant')
-    context = {'jobs': jobs,'applications': applications}
+    
+    filter_type = request.GET.get('filter')
+    if filter_type == "top":
+        applications =applications.filter(match_score__gte = 60)  #gte means Greater Than Equel to  
+    elif filter_type == "shortlisted":
+        applications = applications.filter(
+            status="SHORTLISTED")
+    elif filter_type == "rejected":
+        applications = applications.filter(
+            status="REGECTED")
+    
+    context = {'jobs': jobs,'applications': applications,'current_filter':filter_type}
     return render(request, 'jobs/recruiter_dashboard.html', context)
 
 @login_required
@@ -114,6 +126,13 @@ def apply_job(request, pk):
                     return redirect('jobs:job_detail', pk=job1.pk)
 
             application.save()
+
+            #ATS match score logic add here
+            resume_text = extract_resume_text(application.resume.path)
+            score = calculate_match_score(job1.skills_required.all(),resume_text)
+            application.match_score = score
+            application.save()
+
             messages.success(request, "Application Submitted Successfully!")
         return render(request, 'jobs/apply_job.html', {'form': form,'job': job1})
 
