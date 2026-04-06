@@ -9,8 +9,8 @@ from .utils import extract_resume_text,calculate_match_score
 
 # Create your views here.
 
-
 @login_required
+@recruiter_required
 def recruiter_dashboard(request):
 
     # recruiter jobs
@@ -33,6 +33,7 @@ def recruiter_dashboard(request):
     return render(request, 'jobs/recruiter_dashboard.html', context)
 
 @login_required
+@recruiter_required
 def create_job_post(request):
     if request.user.user_type != 'recruiter':
         return redirect('/')
