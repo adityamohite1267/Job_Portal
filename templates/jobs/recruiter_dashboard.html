@@ -4,7 +4,58 @@
   <h2 class="mb-3">Recruiter Dashboard</h2>
 
   <p class="text-muted">Welcome <strong>{{ request.user.email }}</strong></p>
+  <div class="container mt-4 mb-3">
+    <div class="row text-center">
 
+      <div class="col-md-2">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6>Total Jobs</h6>
+            <h4>{{ total_jobs }}</h4>
+          </div>
+        </div>
+      </div>
+    
+
+      <div class="col-md-2">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6>Total Applications</h6>
+            <h4>{{ total_applications }}</h4>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-2">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6>Rejected</h6>
+            <h4>{{ rejected_count }}</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6>Hired</h6>
+            <h4>{{ hired_count }}</h4>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-2">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6>Total Jobs</h6>
+            <h4>{{ total_jobs }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     {% if messages %}
       <div class="container mt-3">
     {% for message in messages %}
@@ -104,6 +155,7 @@
   <!-- ATS Filter Buttons -->
   <div class="mb-3">
     <a href="?filter=all" class="btn btn-secondary btn-sm">All Applications</a>
+    <a href="?filter=top" class="btn btn-success btn-sm">Top Matches</a>
     <a href="?filter=shortlisted" class="btn btn-primary btn-sm">Shortlisted</a>
     <a href="?filter=rejected" class="btn btn-danger btn-sm">Rejected</a>      
   </div>

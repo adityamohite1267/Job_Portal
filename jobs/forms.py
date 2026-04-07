@@ -1,5 +1,6 @@
 from django import forms
-from .models import Job, Location,Application
+from .models import Job, Location
+from applications.models import Application
 from accounts.models import Skill
 
 class JobForm(forms.ModelForm):

@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .forms import JobForm,ApplicationForm
-from .models import Job,Location,Application
+from .models import Job,Location
+from applications.models import Application
 from accounts.decorators import recruiter_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -19,7 +20,15 @@ def recruiter_dashboard(request):
     # applications for those jobs
     applications = Application.objects.filter(job__recruiter=request.user).select_related('job','applicant')
     
-    filter_type = request.GET.get('filter')
+    #Analytics Counts
+    total_jobs = jobs.count()
+    total_applications = applications.count()
+
+    shortlisted_count = applications.filter(status = "SHORTLISTED").count()
+    rejected_count = applications.filter(status='REJECTED').count()
+    hired_count = applications.filter(status = "HIRED").count()
+    # ATS Filter
+    filter_type = request.GET.get('filter')# Get the value of the "filter" parameter from the URL query string (?filter=...)
     if filter_type == "top":
         applications =applications.filter(match_score__gte = 60)  #gte means Greater Than Equel to  
     elif filter_type == "shortlisted":
@@ -27,9 +36,11 @@ def recruiter_dashboard(request):
             status="SHORTLISTED")
     elif filter_type == "rejected":
         applications = applications.filter(
-            status="REGECTED")
+            status="REJECTED")
     
-    context = {'jobs': jobs,'applications': applications,'current_filter':filter_type}
+    context = {'jobs': jobs,'applications': applications,'current_filter':filter_type,
+               'total_jobs':total_jobs,'total_applications':total_applications,
+               'shortlisted_count':shortlisted_count,'rejected_count':rejected_count,'hired_count':hired_count}
     return render(request, 'jobs/recruiter_dashboard.html', context)
 
 @login_required
@@ -132,6 +143,9 @@ def apply_job(request, pk):
             resume_text = extract_resume_text(application.resume.path)
             score = calculate_match_score(job1.skills_required.all(),resume_text)
             application.match_score = score
+            #auto shortlisted logic
+            if score >=75:
+                application.status = 'shortlisted'
             application.save()
 
             messages.success(request, "Application Submitted Successfully!")
