@@ -46,8 +46,7 @@ def recruiter_dashboard(request):
 @login_required
 @recruiter_required
 def create_job_post(request):
-    if request.user.user_type != 'recruiter':
-        return redirect('/')
+   
     if request.method == 'POST':
         form = JobForm(request.POST)
         if form.is_valid():
@@ -107,13 +106,7 @@ def apply_job(request, pk):
         return redirect('jobs:job_detail', pk=job1.pk)
 
     #show form
-    if request.method == 'GET':
-        form = ApplicationForm()
-        return render(request, 'jobs/apply_job.html', {
-            'form': form,
-            'job': job1
-        })
-
+    
     #submit form
     if request.method == 'POST':
 
@@ -137,21 +130,29 @@ def apply_job(request, pk):
                     messages.error(request, "Please Upload Resume.")
                     return redirect('jobs:job_detail', pk=job1.pk)
 
-            application.save()
+            
 
             #ATS match score logic add here
-            resume_text = extract_resume_text(application.resume.path)
-            score = calculate_match_score(job1.skills_required.all(),resume_text)
-            application.match_score = score
-            #auto shortlisted logic
-            if score >=75:
-                application.status = 'shortlisted'
+            try:
+                resume_text = extract_resume_text(application.resume.path)
+                score = calculate_match_score(job1.skills_required.all(),resume_text)
+                application.match_score = score
+                #auto shortlisted logic
+                if score >=75:
+                    application.status = 'SHORTLISTED'
+            except Exception:
+                messages.error(request, "Error processing resume.")
+                return redirect('jobs/job_detail.html',pk=job1.pk)
+
             application.save()
 
+            
             messages.success(request, "Application Submitted Successfully!")
-        return render(request, 'jobs/apply_job.html', {'form': form,'job': job1})
-
-    return redirect('jobs:job_detail', pk=job1.pk)
+            return redirect('jobs:job_detail',pk=job1.pk)
+    else:
+        form = ApplicationForm()
+    return render(request, 'jobs/apply_job.html', {'form': form,'job': job1})
+   
 
 @login_required
 def my_applications(request):
