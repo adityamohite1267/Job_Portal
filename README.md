@@ -8,7 +8,7 @@ The main goal of this project was to understand how real-world job portals handl
 
 # Project Features
 
-# Role-Based Authentication
+## Role-Based Authentication
 
 The system supports two types of users:
 
@@ -18,8 +18,7 @@ The system supports two types of users:
 Recruiters can post jobs and manage applicants while jobseekers can apply for jobs and track their application status.
 
 
-
-# Job Posting System
+## Job Posting System
 
 Recruiters can:
 
@@ -28,17 +27,17 @@ Recruiters can:
 3. Set job location
 4. Activate or deactivate job listings
 
-# Resume Upload and ATS Match Score
+## Resume Upload and ATS Match Score
 
 Jobseekers can upload resumes while applying.
 
 The system extracts resume text and compares it with job-required skills to calculate a match score This helps simulate how an Applicant Tracking System filters candidates automatically
 
-# Automatic Shortlisting Feature
+## Automatic Shortlisting Feature
 
 If a candidate’s match score is above the defined threshold the system automatically marks the application as shortlisted This reduces manual effort for recruiters
 
-# Recruiter Dashboard Analytics
+## Recruiter Dashboard Analytics
 
 Recruiters can view:
 
@@ -50,7 +49,7 @@ Recruiters can view:
 
 This helps recruiters quickly understand the hiring pipeline.
 
-# Application Status Workflow
+## Application Status Workflow
 
 Recruiters can update candidate status:
 
@@ -60,17 +59,17 @@ Recruiters can update candidate status:
 
 Applicants can track their application progress from their dashboard
 
-# Email Notification System
+## Email Notification System
 
 Whenever a recruiter updates an application status the candidate receives an email notification automatically
 
 The system sends notifications only when the status changes to avoid duplicate emails
 
-# Duplicate Application Prevention
+## Duplicate Application Prevention
 
 The system prevents users from applying multiple times for the same job using database-level constraints
 
-# Technologies Used
+## Technologies Used
 
 Backend:
 
@@ -95,7 +94,17 @@ Other Concepts Used:
 4. ATS match score calculation
 5. Role-based dashboards
 
-# What I Learned From This Project
+## Environment Setup
+Create a .env file using .env.example 
+Example `.env` file:
+
+EMAIL_HOST_USER=abc_email@gmail.com
+EMAIL_HOST_PASSWORD=app_password
+DB_NAME=jobportal
+DB_USER=root
+DB_PASSWORD=mysql_password
+
+## What I Learned From This Project
 
 While building this project I learned:
 
@@ -108,7 +117,7 @@ While building this project I learned:
 
 This project helped me understand how real recruitment platforms manage candidate applications.
 
-# Future Improvements
+## Future Improvements
 
 Planned improvements for this project:
 
@@ -117,7 +126,7 @@ Planned improvements for this project:
 3. Cloud deployment (Render)
 4. AI-based job recommendation system
 
-# Author
+## Author
 
 Aditya Mohite
 Computer Science Engineering Student
