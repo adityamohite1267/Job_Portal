@@ -131,3 +131,12 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = 'jobs:joblist'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'mohiteaditya7777@gmail.com'
+EMAIL_HOST_PASSWORD = 'jpgx gelg oktl glai'
