@@ -121,6 +121,7 @@ def apply_job(request, pk):
             application = form.save(commit=False)
             application.job = job1
             application.applicant = request.user
+            application.applicant.save()
 
             if not application.resume:
                 profile = request.user.jobseekerprofile
@@ -140,6 +141,7 @@ def apply_job(request, pk):
                 #auto shortlisted logic
                 if score >=75:
                     application.status = 'SHORTLISTED'
+                    application.save()
             except Exception:
                 messages.error(request, "Error processing resume.")
                 return redirect('jobs/job_detail.html',pk=job1.pk)
