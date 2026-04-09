@@ -1,8 +1,8 @@
 from pdfminer.high_level import extract_text
 
-def extract_resume_text(resume_path):  # this extract text from uploaded resume pdf 
+def extract_resume_text(resume_file):  # this extract text from uploaded resume pdf 
     try:
-        text = extract_text(resume_path)
+        text = extract_text(resume_file)
         return text.lower()
     except Exception as e:
         print("Resume extraction error:",e)

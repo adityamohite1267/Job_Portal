@@ -134,7 +134,7 @@ def apply_job(request, pk):
 
             #ATS match score logic add here
             try:
-                resume_text = extract_resume_text(application.resume.path)
+                resume_text = extract_resume_text(application.resume.file)
                 score = calculate_match_score(job1.skills_required.all(),resume_text)
                 application.match_score = score
                 #auto shortlisted logic
