@@ -1,262 +1,235 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="container mt-4">
-  <h2 class="mb-3">Recruiter Dashboard</h2>
+<div class="container-lg py-4">
+  <div class="mb-4">
+    <h2 class="fs-4 fw-semibold mb-1">Recruiter Dashboard</h2>
+    <p class="text-muted small mb-0">
+      Welcome, <strong>{{ request.user.email }}</strong>
+    </p>
+  </div>
 
-  <p class="text-muted">Welcome <strong>{{ request.user.email }}</strong></p>
-  <div class="container mt-4 mb-3">
-    <div class="row text-center">
+  {% if messages %} {% for message in messages %}
 
-      <div class="col-md-2">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h6>Total Jobs</h6>
-            <h4>{{ total_jobs }}</h4>
-          </div>
-        </div>
+  <div
+    class="alert alert-success alert-dismissible fade show py-2 px-3 small"
+    role="alert"
+  >
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %} {% endif %}
+
+  <!-- Stats Card -->
+  <div class="row g-3 mb-4 text-center">
+    <div class="col-6 col-sm-3">
+      <div class="bg-light rounded-3 p-3">
+        <div class="text-muted small mb-1">Total jobs</div>
+        <div class="fs-4 fw-semibold">{{ total_jobs }}</div>
       </div>
-    
-
-      <div class="col-md-2">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h6>Total Applications</h6>
-            <h4>{{ total_applications }}</h4>
-          </div>
-        </div>
+    </div>
+    <div class="col-6 col-sm-3">
+      <div class="bg-light rounded-3 p-3">
+        <div class="text-muted small mb-1">Applications</div>
+        <div class="fs-4 fw-semibold">{{ total_applications }}</div>
       </div>
-
-
-      <div class="col-md-2">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h6>Rejected</h6>
-            <h4>{{ rejected_count }}</h4>
-          </div>
-        </div>
+    </div>
+    <div class="col-6 col-sm-3">
+      <div class="bg-light rounded-3 p-3">
+        <div class="text-muted small mb-1">Hired</div>
+        <div class="fs-4 fw-semibold text-success">{{ hired_count }}</div>
       </div>
-
-      <div class="col-md-2">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h6>Hired</h6>
-            <h4>{{ hired_count }}</h4>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="col-md-2">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h6>Total Jobs</h6>
-            <h4>{{ total_jobs }}</h4>
-          </div>
-        </div>
+    </div>
+    <div class="col-6 col-sm-3">
+      <div class="bg-light rounded-3 p-3">
+        <div class="text-muted small mb-1">Rejected</div>
+        <div class="fs-4 fw-semibold text-danger">{{ rejected_count }}</div>
       </div>
     </div>
   </div>
-    {% if messages %}
-      <div class="container mt-3">
-    {% for message in messages %}
-  
-      <div class="alert alert-success alert-dismissible fade show">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
 
-    {% endfor %}
-</div>
-{% endif %}
-
-  <div class="d-flex gap-2 mb-4">
-    <a href="{% url 'jobs:create_job_post' %}" class="btn btn-primary">
-      + Add Job
-    </a>
-
-    <!-- <form method="post" action="{% url 'logout' %}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Logout</button>
-    </form> -->
-  </div>
-</div>
-
-<!-- job  -->
-
-<div class="container mb-5">
-  <div class="card shadow-sm">
-    <div class="card-header bg-dark text-white">
-      <h5 class="mb-0">Your Job Posts</h5>
+  <!-- job Post -->
+  <div class="mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h3 class="fs-6 fw-semibold mb-0">Your job posts</h3>
+      <a href="{% url 'jobs:create_job_post' %}" class="btn btn-primary btn-sm">
+        + Add Job
+      </a>
     </div>
 
-    <div class="card-body p-0">
-      <table class="table table-hover mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for job in jobs %}
-
-          <tr>
-            <td>{{ job.title }}</td>
-
-            <td>
-              {% if job.is_active %}
-              <span class="badge bg-success">Active</span>
-              {% else %}
-              <span class="badge bg-danger">Inactive</span>
-              {% endif %}
-            </td>
-
-            <td>
-              {% if job.is_active %}
-
-              <a
-                href="{% url 'jobs:toggle_job_status' job.id %}"
-                class="btn btn-sm btn-warning"
-              >
-                Deactivate
-              </a>
-
-              {% else %}
-
-              <a
-                href="{% url 'jobs:toggle_job_status' job.id %}"
-                class="btn btn-sm btn-success"
-              >
-                Activate
-              </a>
-
-              {% endif %}
-            </td>
-          </tr>
-
-          {% empty %}
-
-          <tr>
-            <td colspan="3" class="text-center p-3">No jobs posted yet</td>
-          </tr>
-
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- application -->
-
-<div class="container">
-  <!-- ATS Filter Buttons -->
-  <div class="mb-3">
-    <a href="?filter=all" class="btn btn-secondary btn-sm">All Applications</a>
-    <a href="?filter=top" class="btn btn-success btn-sm">Top Matches</a>
-    <a href="?filter=shortlisted" class="btn btn-primary btn-sm">Shortlisted</a>
-    <a href="?filter=rejected" class="btn btn-danger btn-sm">Rejected</a>      
-  </div>
-  <div class="card shadow-sm">
-    <div class="card-body p-0">
-      <table class="table table-striped table-hover mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>Job</th>
-            <th>Applicant</th>
-            <th>Email</th>
-            <th>Applied On</th>
-            <th>Match Score</th>
-            <th>Resume</th>
-            <th>Status</th>
-            <th colspan="3" class="text-center">Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {% for app in applications %}
-
-          <tr>
-            <td>{{ app.job.title }}</td>
-
-            <td>{{ app.applicant.username }}</td>
-
-            <td>{{ app.applicant.email }}</td>
-
-            <td>{{ app.applied_at|date:"d M Y" }}</td>
-            <td>
-              {% if app.match_score >= 80 %}
-              <span class="badge bg-success">
-                {{ app.match_score }} %
-              </span>
-              {% elif app.match_score >= 60 %}
-              <span class="badge bg-primary">
-                {{ app.match_score }} %
-              </span>
-              <span class="badge bg-warning text-dark">
-                {{ app.match_score }} %
-              </span>
-              {% else %}
-              <span class="badge bg-danger">
-                {{ app.match_score }} %
-              </span>
-              {% endif %}
-            </td>
-            <td>
-              {% if app.resume %}
-                <a href="{{ app.resume.url }}" 
-                   class="btn btn-sm btn-outline-primary"
-                   target="_blank">
-                   View Resume
+    <div class="card border rounded-3 shadow-none overflow-hidden">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 small">
+          <thead class="table-light">
+            <tr>
+              <th>Job title</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in jobs %}
+            <tr>
+              <td class="fw-medium">{{ job.title }}</td>
+              <td>
+                {% if job.is_active %}
+                <span class="badge text-bg-success">Active</span>
+                {% else %}
+                <span class="badge text-bg-secondary">Inactive</span>
+                {% endif %}
+              </td>
+              <td>
+                <a
+                  href="{% url 'jobs:toggle_job_status' job.id %}"
+                  class="btn btn-sm {% if job.is_active %}btn-outline-warning{% else %}btn-outline-success{% endif %}"
+                >
+                  {% if job.is_active %}Deactivate{% else %}Activate{% endif %}
                 </a>
-              {% else %}
-                <span class="text-muted">No Resume</span>
-              {% endif %}
-            </td>
-            <td>
-              {% if app.status == "APPLIED" %}
-                <span class="badge bg-secondary">Applied</span>
-              {% elif app.status == 'SHORTLISTED' %}
-                <span class="badge bg-info">Shortlisted</span>
-              {% elif app.status == 'REJECTED' %}
-                <span class="badge bg-danger">Rejected</span>
-              {% elif app.status == 'HIRED' %}
-                <span class="badge bg-success">Hired</span>
-              {% endif %}
-            </td>
-            <td>
-            <a href="{% url 'jobs:update_application_status' app.id 'SHORTLISTED' %}"
-              class="btn btn-sm btn-primary">
-              Shortlist
-            </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" class="text-center text-muted py-4">
+                No jobs posted yet
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-            <a href="{% url 'jobs:update_application_status' app.id 'REJECTED' %}"
-              class="btn btn-sm btn-danger">
-              Reject
-            </a>
+  {{-- Applications --}}
+  <div class="mb-5">
+    <h3 class="fs-6 fw-semibold mb-3">Applications</h3>
 
-            <a href="{% url 'jobs:update_application_status' app.id 'HIRED' %}"
-              class="btn btn-sm btn-success">
-              Hire
-            </a>
+    {{-- Filter bar --}}
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <a
+        href="?filter=all"
+        class="btn btn-sm {% if request.GET.filter == 'all' or not request.GET.filter %}btn-secondary{% else %}btn-outline-secondary{% endif %}"
+      >
+        All
+      </a>
+      <a
+        href="?filter=top"
+        class="btn btn-sm {% if request.GET.filter == 'top' %}btn-success{% else %}btn-outline-success{% endif %}"
+      >
+        Top matches
+      </a>
+      <a
+        href="?filter=shortlisted"
+        class="btn btn-sm {% if request.GET.filter == 'shortlisted' %}btn-primary{% else %}btn-outline-primary{% endif %}"
+      >
+        Shortlisted
+      </a>
+      <a
+        href="?filter=rejected"
+        class="btn btn-sm {% if request.GET.filter == 'rejected' %}btn-danger{% else %}btn-outline-danger{% endif %}"
+      >
+        Rejected
+      </a>
+    </div>
 
-            </td>
-          </tr>
-
-          {% empty %}
-
-          <tr>
-            <td colspan="7" class="text-center p-3">
-              No applications received yet
-            </td>
-          </tr>
-
-          {% endfor %}
-        </tbody>
-
-      </table>
+    <div class="card border rounded-3 shadow-none overflow-hidden">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 small">
+          <thead class="table-light">
+            <tr>
+              <th>Job</th>
+              <th>Applicant</th>
+              <th class="text-nowrap">Applied on</th>
+              <th>Match</th>
+              <th>Resume</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for app in applications %}
+            <tr>
+              <td class="text-nowrap">{{ app.job.title }}</td>
+              <td>
+                <div class="fw-medium">{{ app.applicant.username }}</div>
+                <div class="text-muted" style="font-size: 12px">
+                  {{ app.applicant.email }}
+                </div>
+              </td>
+              <td class="text-nowrap text-muted">
+                {{ app.applied_at|date:"d M Y" }}
+              </td>
+              <td>
+                {% if app.match_score >= 80 %}
+                <span class="badge text-bg-success"
+                  >{{ app.match_score }}%</span
+                >
+                {% elif app.match_score >= 60 %}
+                <span class="badge text-bg-warning"
+                  >{{ app.match_score }}%</span
+                >
+                {% else %}
+                <span class="badge text-bg-danger">{{ app.match_score }}%</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if app.resume %}
+                <a
+                  href="{{ app.resume.url }}"
+                  class="btn btn-sm btn-outline-primary"
+                  target="_blank"
+                >
+                  View
+                </a>
+                {% else %}
+                <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if app.status == "APPLIED" %}
+                <span class="badge text-bg-secondary">Applied</span>
+                {% elif app.status == "SHORTLISTED" %}
+                <span class="badge text-bg-info">Shortlisted</span>
+                {% elif app.status == "REJECTED" %}
+                <span class="badge text-bg-danger">Rejected</span>
+                {% elif app.status == "HIRED" %}
+                <span class="badge text-bg-success">Hired</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="d-flex flex-wrap gap-1">
+                  <a
+                    href="{% url 'jobs:update_application_status' app.id 'SHORTLISTED' %}"
+                    class="btn btn-sm btn-outline-primary"
+                    >Shortlist</a
+                  >
+                  <a
+                    href="{% url 'jobs:update_application_status' app.id 'REJECTED' %}"
+                    class="btn btn-sm btn-outline-danger"
+                    >Reject</a
+                  >
+                  <a
+                    href="{% url 'jobs:update_application_status' app.id 'HIRED' %}"
+                    class="btn btn-sm btn-outline-success"
+                    >Hire</a
+                  >
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">
+                No applications received yet
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

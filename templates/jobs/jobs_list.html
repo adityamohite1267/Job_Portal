@@ -9,7 +9,7 @@
       {% csrf_token %}
       <button class="btn btn-outline-danger btn-sm">Logout</button>
     </form>
-    {% else %}
+    {% else %}                
     <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-sm">
       Login
     </a>
