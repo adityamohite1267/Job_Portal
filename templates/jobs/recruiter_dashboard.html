@@ -112,25 +112,25 @@
     <div class="d-flex flex-wrap gap-2 mb-3">
       <a
         href="?filter=all"
-        class="btn btn-sm {% if request.GET.filter == 'all' or not request.GET.filter %}btn-secondary{% else %}btn-outline-secondary{% endif %}"
+        class="btn btn-sm {% if not current_filter or current_filter == 'all' %}btn-secondary{% else %}btn-outline-secondary{% endif %}"
       >
         All
       </a>
       <a
         href="?filter=top"
-        class="btn btn-sm {% if request.GET.filter == 'top' %}btn-success{% else %}btn-outline-success{% endif %}"
+        class="btn btn-sm {% if current_filter == 'top' %}btn-success{% else %}btn-outline-success{% endif %}"
       >
         Top matches
       </a>
       <a
         href="?filter=shortlisted"
-        class="btn btn-sm {% if request.GET.filter == 'shortlisted' %}btn-primary{% else %}btn-outline-primary{% endif %}"
+        class="btn btn-sm {% if current_filter == 'shortlisted' %}btn-primary{% else %}btn-outline-primary{% endif %}"
       >
         Shortlisted
       </a>
       <a
         href="?filter=rejected"
-        class="btn btn-sm {% if request.GET.filter == 'rejected' %}btn-danger{% else %}btn-outline-danger{% endif %}"
+        class="btn btn-sm {% if current_filter == 'rejected' %}btn-danger{% else %}btn-outline-danger{% endif %}"
       >
         Rejected
       </a>
