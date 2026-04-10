@@ -105,7 +105,7 @@ def apply_job(request, pk):
         messages.error(request, "Only Job Seekers can apply.")
         return redirect('jobs:job_detail', pk=job1.pk)
 
-    #show form
+    
     
     #submit form
     if request.method == 'POST':
@@ -121,7 +121,7 @@ def apply_job(request, pk):
             application = form.save(commit=False)
             application.job = job1
             application.applicant = request.user
-            application.applicant.save()
+            application.save()
 
             if not application.resume:
                 profile = request.user.jobseekerprofile
@@ -131,11 +131,10 @@ def apply_job(request, pk):
                     messages.error(request, "Please Upload Resume.")
                     return redirect('jobs:job_detail', pk=job1.pk)
 
-            
 
             #ATS match score logic add here
             try:
-                resume_text = extract_resume_text(application.resume.file)
+                resume_text = extract_resume_text(application.resume)
                 score = calculate_match_score(job1.skills_required.all(),resume_text)
                 application.match_score = score
                 #auto shortlisted logic
@@ -144,7 +143,7 @@ def apply_job(request, pk):
                     application.save()
             except Exception:
                 messages.error(request, "Error processing resume.")
-                return redirect('jobs/job_detail.html',pk=job1.pk)
+                return redirect('jobs:job_detail.html',pk=job1.pk)
 
             application.save()
 
